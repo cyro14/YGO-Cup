@@ -1,4 +1,3 @@
-
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8"></meta>
@@ -30,6 +29,8 @@
         
         p { color: #555555; margin-top: 0; font-size: 15px; font-weight: 500; }
 
+        
+      
         /* --- FILTRO --- */
         #filtro-cartas {
             margin-bottom: 20px;
@@ -73,16 +74,13 @@
             display: flex; justify-content: space-between; align-items: stretch;
             min-width: 1200px; 
             
-            /* --- CONFIGURAÇÃO DO BACKGROUND --- */
-            background-color: #1a1a1a; /* Cor de segurança caso a internet falhe */
-            background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgo9rlwCqNwkgF_bbv409Mdqx24wJlql8My7Hjn1qc2EZnQJaWoNSWQVO_dzIBKjwTLdX_GZ77Q-Fv8Sr-fQNG1IV9aV2xlc5DYay2VFrsaBUm44Fce3uz0v5K1f-3qO-ZDrbTxVX1rQqDhsDrQNOMe0zFo6DV0XF43gfBRjcXzq83L1Km9rFyVgAD70wax/s1600/Design%20sem%20nome%20(14).png'); 
-            background-size: cover;
-            background-position: center;
-            /* ---------------------------------- */
+            /* Mantemos apenas a cor sólida como segurança */
+            background-color: #1a1a1a; 
             
             padding: 40px; margin: 0 auto;
             border-radius: 12px; position: relative;
         }
+
 
         .side, .center-stage { display: flex; gap: 10px; position: relative; z-index: 1;}
         .side.right { flex-direction: row-reverse; }
@@ -136,20 +134,22 @@
         button:disabled { background-color: #888; cursor: not-allowed; transform: none; }
         .btn-restart { background-color: #444; color: white; }
         .btn-restart:hover { background-color: #222; }
+      #btn-download:hover { background-color: #2980b9; }
         
     </style>
 </head>
 <body>
 
     <h1></h1>
-    
+    <div style="margin-bottom: 20px;">
     <select id="filtro-cartas" onchange="iniciarTorneio()">
         <option value="todos">Todas as Cartas</option>
         <option value="monstro">Somente Monstros</option>
         <option value="magia">Somente Magias</option>
         <option value="armadilha">Somente Armadilhas</option>
     </select>
-    
+    <button onclick="carregarRanking()" style="background-color: #f39c12; margin-left: 10px;">🏆 Hall da Fama</button>
+  </div>
     <!-- TELA 1: ARENA DE DUELOS -->
     <div id="screen-arena">
         <p>Toque na sua carta favorita para vencer o duelo e avançar!</p>
@@ -170,13 +170,22 @@
     <!-- TELA 2: RESULTADO E COMPARTILHAMENTO -->
     <div id="screen-bracket">
         <div class="btn-container">
-            <button id="btn-share" onclick="compartilharResultado()">Desafiar Amigos</button>
+          <button id="btn-download" onclick="baixarResultado()" style="background-color: #3498db;">⬇️ Baixar Imagem</button>
+            
+            <button id="btn-share" onclick="compartilharResultado()">Compartilhar</button>
             <button class="btn-restart" onclick="iniciarTorneio()">Sortear Novo Torneio</button>
         </div>
 
         <div class="scroll-wrapper">
             <div class="bracket-board" id="bracket-board"></div>
         </div>
+    </div>
+  
+  <!-- TELA 3: HALL DA FAMA -->
+    <div id="screen-ranking" style="display: none; flex-direction: column; align-items: center; margin-top: 20px;">
+        <h2 style="color: var(--gold); text-transform: uppercase;">Top 10 da Comunidade</h2>
+        <div id="ranking-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 900px; margin-bottom: 20px;"></div>
+        <button onclick="iniciarTorneio()">Voltar para a Arena</button>
     </div>
 
     <script>
@@ -197,8 +206,8 @@
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTmXFQZ-H19JzmOnWNGfD0d78cYZKi6v_FVSLiFEju-NzR04ktHKV0Y56yXuSKyL5DmVqPeoE2x2H3mBAzTK5pTDo_XDXHs0KtcQ1mqHkymM21FyBNRJZogZVt2P2t_wAevbzxDEXrh5P4SdrEjlLPOp0Kxaw0iU9GrHRvYxx0xCdEJ0jfHMukMGNsnNjI/s320/1000112562.jpg", tipo: "monstro" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgvTdQ5J5WPfNklAODbyDTdQmCQ51c9fPlCr_GcUFdh0a4tHsmGsikGGoxWVbHfSB2hpVhteyQPz75SlSYSQHN1xOqmJtLne_NQIfXgTHAcB4N97AteC7v2e5QxIrgRn5Tzks-_Z7Tbo4ry6EOCez1QkhKaI68IwafuFvxK9sZpaBBs2PiF6MbNEah6OGtT/s320/1000112563.jpg", tipo: "monstro" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZO62zvwQPg98ldqqHxmv7o7e4pcQGKIBW4Ga7xdeqSwgnOND3FAfKdxvJCr1Aj2Ew1UjIrUe2b1rWYXi-wA7nUtfbm35Oims146bVWOU10c99l1auYrSW98GXQPKP0hPO4q8MqkY_RVQ4-jL6Avt9-KaqT-aJD0Dw5PhanFstqo9Q3VePjZj-hIP6jkND/s320/1000112564.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh10Y4wxZtUMHPynxwhF7yl9f7y-s2BVF6IPJav8nckiqkbzMHN6FpK3p0OKApx4_J88R26q1SoASi_4-LF70nbRb_3eMg5r4JDX9Q1PbvTTyr14Tui8pPficwE29-T0OaHT_nRZWKNzuKiwqZ0XuWQx6MelVjtvCcdDkjHWlBSgWKaS5HWuE15QJKRUCjz/s320/1000112565.jpg", tipo: "monstro" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjut-sjHPNZNY7xZg6S3IOvY7yJ_J5fEzwhl7TdO8D6rq5bmmED63vaFGQpUjDrI8yxsU7SbpQa7aqUgswX0PD2A2zjKJwQ2KYNkRK1KBX1MQ5a2EAeSXwCANv_wRbH1Z15ic6aCWh0Y9xoynrimpeHmLX26BWDEVcXVdmkoCl30gGr08Y0S5NyxtZzfYV6/s320/1000112566.jpg", tipo: "magia" },
+            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh10Y4wxZtUMHPynxwhF7yl9f7y-s2BVF6IPJav8nckiqkbzMHN6FpK3p0OKApx4_J88R26q1SoASi_4-LF70nbRb_3eMg5r4JDX9Q1PbvTTyr14Tui8pPficwE29-T0OaHT_nRZWKNzuKiwqZ0XuWQx6MelVjtvCcdDkjHWlBSgWKaS5HWuE15QJKRUCjz/s320/1000112565.jpg", tipo: "magia" },
+            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjut-sjHPNZNY7xZg6S3IOvY7yJ_J5fEzwhl7TdO8D6rq5bmmED63vaFGQpUjDrI8yxsU7SbpQa7aqUgswX0PD2A2zjKJwQ2KYNkRK1KBX1MQ5a2EAeSXwCANv_wRbH1Z15ic6aCWh0Y9xoynrimpeHmLX26BWDEVcXVdmkoCl30gGr08Y0S5NyxtZzfYV6/s320/1000112566.jpg", tipo: "monstro" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgMziTNZyZG8mjWDku1CDiqguqCNSy83tqWwX959lOPyOCG0ZOWl7Od4g13yCNwbyTWJH-CIzr3O_fs4CY9hJXg181Y-m6a9geVO4DpKYBORsRJi67bIrT4OgoTxev_5IRDUZNyQeJ7MM4dB7f6rHjrYs0UEamRfD5xvCzerMDqqZdiRMA53RV-Cg-Y9EEf/s320/1000112567.jpg", tipo: "monstro" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhUAEF5FG4v-rE-gLOgLwzqlh5XnFy0yGAxnXM9Dgfz2sD5up7tC2MbO8Li6RFKlaNaTuWHUX0u7OHTYQrfkIb-TroLHqMIxZEmqsXQluti4iZmEnit50Jbf-vE3dfZpXpGmD3zPgvY8ASK1-JeFnNQWtox73I6Vj0r-xIskpCImx8nI_q1-8YphBCtISev/s320/1000112568.jpg", tipo: "monstro" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg7r954KbhipybQYvQ6qrEiKs3COw2X_PHkT2wAtcdGC8nU6ihCQ8bG2fTZ9KyeaTxf2Jj9N0RLbbTWzaE-SOo34g6bFeZSegiUhWt_tsH1uI017HbHJpN9wMA5DYDYXDBJ4ek5ZPhL60Wm3kbFTXPb3Zcw3AAbBK4cQ27N7qWcSnFKBHS379Q4EBq06SjC/s320/1000112569.jpg", tipo: "monstro" },
@@ -219,323 +228,4 @@
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEifeRHRF0tTommiWgDd8VXoZM7OdFZhn3RjZAFQA79ylfnr2Zumo4ocrjBx8UFZktqj3ii-wFiGajHNlTcVjmIPXGgD4768jz6zNprqoUJhOlroO3InhH23lTffE5JP0o-27AnGi3oBRspT1kr4K57CP-Bsif8XWcOyf4V-c5lZTiL-2f7K4RIzXtSnogjE/s320/1000112585.jpg", tipo: "monstro" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpXaGUeRmqYJpROVKN-Tcgm2vqG2FT1gZ6j7-a__EY-8TSpd1rKbq3eYS6aEqbvkDnJ_USeD-OOp1p1D1_7UQ0_FYKV6SohgPbUX8MxilSBXPLqV5O73ss63w4tszF1y6Qh-BfZPDKjzV7-YI2vbpV5Y3RVmUppz4-Jcy4IxbA6jYHh9sDWCo7bEpdlOF5/s320/1000112586.jpg", tipo: "magia" },
             { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgvVSBrPA1qui8Tq_CUQ1oTVed2-NlveEdRhp7J0zQ84ZsJOk4oB0MMPmybqPtdJhjKyQl5Hxodj4D_JXDPHOkAWxjOqF5Nz3SWHaMSasjLfK8YXrhXiJSrtg5Y0hoDWds4plbmaR_8llb5i-Bw-VNz_tJKbsWKNaywdpsUgguARrvLzTcgEC-_2nIP7vKk/s320/1000112587.jpg", tipo: "monstro" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdsr_mewDRfFtq-brBfi3yjZfLEubBq0g8nN8852rUD8j5aAp3WfqjXXNM6Cv4Obdg1GZ1OndsxaA12pG_8ShRjBXjY2eHo22-eKcRuPXXHNcEAVU4gnbFOyqsgeLLY0YazOTarbZV4vCHk32D2ANIs49G7L2TmnaCLe5AvK0l51rh5MdLDd32UAblkMn6/s320/1000112588.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwFLAk4_UMo9TP9Z_Hn8FYgnh7D7P-UfJdq-0kGM8KIc18dzGl5voSyAKu2hyphenhyphenm6fQxCnKjxyIxdnEb2FsvBG53AtJ_uSZbTqqGU8PRw-c5vXVT3akj4kuj4HW1VCX0Icx0KlvuCO2387bkoNB5Lgol5ak9Qb9tuoC2wUSsjvpVyvLPn9Ilia9ppZcOTmMw/s320/1000112589.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjm1ponM45vefbvVmGoNTzawu07OJ2GLab9htFN33M4hYxl39mAfSaTuLkPwE674RUIr7uD4-gsVF65B-2ZbdrxdUEgmGHeBNpj_8RocRrdDA5U9CVE4NmxIsm6J4b1Er3zpHUHVGzOtWC8i7Xqxfz9tVeBLFrAS1J2GrOupk79yJ_jhkHe04qYQi_UA610/s320/1000112590.jpg", tipo: "monstro" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEir4_hSHnynVGxvv8yUxNcfZzjKNPgGqQq38nA3hzCDBOFBOAYhWG7eIggErYWimJTyKwkG534mwI_7tUMp4B_AjRY357V6xBp95M1d9CLZYjHWvNJjoBd1PAUTckstrxI24idjYa5PCyl5GGP3R97XVCAN8sOOSLY_Fr6jKNISUPAojskRCVNhCZYrCIm5/s320/1000112591.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV8BtPpS6GteGewTwx7UWU6M2UN7OFdVAYkcdDFCUkpfv-aooYuzc8-HDOUsg5dNLrAH8577IitIHkeDmHZcquH3Ul6AroubRMNhk98OmkHnSWT7vHq9rbiZaEy98Y8IHrYCx5cuyX4m4SxrsRSm5V9khA2Beg_grgszxlgUiB-656TlsA2I7g9FKcUAaw/s320/1000112592.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjxTfIM8UltGRgdjKWjxFNayIlpeC8X6TpfKm8Yu59fTB-VSG7HVzbnIOVSSuimz4HOWXK2IwDL4YNJJpt8-UNcOspzxEGTX70JGv5ALsh2oiMuH-S_s4q4QPmOwSraeVaG-gD7PWWI9VLGxSQujmIZWasa_MdT0t-f4DHU6nXvvDyXN8aipZHVhFXooB1i/s320/1000112593.jpg", tipo: "armadilha" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnZDf7re-YRTrGHJJ8NQI9t7NCsO3GcstL0sj92xaHIreYhjD8F3t3C9FNyN353_nyf_Vdtp5ox1164poNL_XHwlEvbRyRRWVWm65DC8MHS4I0-rs-fgORpqMcuAicfF4NJpFYuOgadBzw5ljvQUnszQtdrwHthQJq4p5p2YFjZITeFi0vCayBMHDPzzy1/s320/1000112594.jpg", tipo: "monstro" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiC9s13uZIv_fi3CRxIro01JX_AJF5rcJPzDIDSwBRQY6njjaPHUGZBj9CQa4DuAbULmLlH0aY74ccvS_uuIe_-IidePd5tBLMoeLttOl7gxHNo8hE6kVCySLWo1ne3oHEr5EFQL1RlFl4es4OiHNhb12d_ngWZDKxHAMOXm-yqIMr0feFsDwmLwaB6YxmI/s320/1000112595.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXLb0JkPqs-EBjnu8uEii2Jp_Iw4MLDRo-jcvuwawL6G6WvSzMvkZZIkFklllSTA0B9TQYSmPWtyOFOmp_Wr19na0t01KCmOalOCNwHaPQbhcXur4cH4J_enOVa_EBuTyZnRuPoEpwHl8oEVTOspo33LvPXiRYcsQfmQjRWj0AvEpq-1fICmof1wOrV6ql/s320/1000112596.jpg", tipo: "monstro" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgrOfhnAMTZdvanG0E6SPMox4LtLNfN8vutu8CDa2Ufr37pVVOrq8vS_Y9C9EtLNV_PrPuYZjpkrODsE47t7V7aGsEYFkCptagUMgLkKTr11DONpO_OnM-f4GPMTx4RcDpdhtR0WQ7iAL3c28LZnRfRans7Lref_sB4cY4Ukxdp08T3X63X3jSuU6lfpWHe/s320/1000112597.jpg", tipo: "magia" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEPpptKec68N10KF2fBmgYnqi3DBngfspCYGmlGZklwdidLK9mm2KIRiFr7ARA_5IUn7zNqtW_SXJU2OMheeM9olZADxRW3wbVfoFEM8Wm7CXCO-KbesvAKlfZHpWVWsSb4N4g0FQH4dNfvI8QtC7bAnONpCWBENYsi2r4h2W0G80p8By9SWmxiXEtWmWz/s320/1000112598.jpg", tipo: "monstro" },
-            { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEilFPhJcJR0GuFeKnzSpKAQRMI-w4cTQg5t-8t8JP6cGOfWccy9AHRwtYe9eHhgYvgagZAN4MyheTXuDy3mcQA2TfhiZe501TnNgFsTOJX6peqduKmzfwEPYQMqeFYJ4LCS0b6nWt0wwSOdqZI_ztfqQncalFtiDvHKvj_K1hWWnYM20afpnLyrXX2Tq6uJ/s320/1000112599.jpg", tipo: "magia" },
-        ];
-
-        const nomesFases = ["Fase de Grupos", "Oitavas de Final", "Quartas de Final", "Semifinal", "A Grande Final"];
-        const cartaSegura = cartasDatabase[0].url; 
-
-        const urlWallpaper = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgo9rlwCqNwkgF_bbv409Mdqx24wJlql8My7Hjn1qc2EZnQJaWoNSWQVO_dzIBKjwTLdX_GZ77Q-Fv8Sr-fQNG1IV9aV2xlc5DYay2VFrsaBUm44Fce3uz0v5K1f-3qO-ZDrbTxVX1rQqDhsDrQNOMe0zFo6DV0XF43gfBRjcXzq83L1Km9rFyVgAD70wax/s1600/Design%20sem%20nome%20(14).png";
-        
-        let megaPool = [];
-        let torneio = [];
-        let faseAtual = 0;
-        let partidaAtual = 0;
-        let campeao = null;
-        let poolDisponivel = []; 
-
-        function embaralhar(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        }
-
-         function fazerPreload(urls) {
-            urls.forEach(url => {
-                const img = new Image();
-                img.src = url;
-         });
-            // Faz o download do wallpaper silenciosamente no background
-            const imgBg = new Image();
-            imgBg.src = urlWallpaper;
-        }
-
-
-        function iniciarTorneio() {
-            document.getElementById('screen-bracket').style.display = 'none';
-            document.getElementById('screen-arena').style.display = 'flex';
-
-            // Filtragem
-            const filtroSelecionado = document.getElementById('filtro-cartas').value;
-            if (filtroSelecionado === "todos") {
-                megaPool = cartasDatabase.map(carta => carta.url);
-            } else {
-                megaPool = cartasDatabase
-                    .filter(carta => carta.tipo === filtroSelecionado)
-                    .map(carta => carta.url);
-            }
-
-            if (megaPool.length < 32) {
-                alert("Atenção: Adicione pelo menos 32 cartas com o tipo '" + filtroSelecionado + "' no banco de dados para criar um torneio!");
-                // Reseta pro filtro default para não quebrar a tela
-                document.getElementById('filtro-cartas').value = "todos";
-                megaPool = cartasDatabase.map(carta => carta.url);
-            }
-
-            let embaralhadas = embaralhar([...megaPool]);
-            let cartasDoTorneio = embaralhadas.slice(0, 32);
-            poolDisponivel = embaralhadas.slice(32); 
-
-            fazerPreload(cartasDoTorneio);
-
-            torneio = [
-                Array.from({length: 16}, () => ({ p1: null, p2: null })),
-                Array.from({length: 8}, () => ({ p1: null, p2: null })),
-                Array.from({length: 4}, () => ({ p1: null, p2: null })),
-                Array.from({length: 2}, () => ({ p1: null, p2: null })),
-                Array.from({length: 1}, () => ({ p1: null, p2: null }))
-            ];
-
-            for (let i = 0; i < 16; i++) {
-                torneio[0][i].p1 = cartasDoTorneio[i * 2];
-                torneio[0][i].p2 = cartasDoTorneio[i * 2 + 1];
-            }
-
-            faseAtual = 0;
-            partidaAtual = 0;
-            campeao = null;
-
-            document.getElementById('card-left').dataset.erros = 0;
-            document.getElementById('card-right').dataset.erros = 0;
-
-            atualizarArena();
-        }
-
-        function atualizarArena() {
-            const partida = torneio[faseAtual][partidaAtual];
-            const totalDuelos = torneio[faseAtual].length;
-            
-            document.getElementById('round-title').innerText = `${nomesFases[faseAtual]} - Duelo ${partidaAtual + 1} de ${totalDuelos}`;
-            document.getElementById('card-left').src = partida.p1;
-            document.getElementById('card-right').src = partida.p2;
-        }
-
-        function trocarCarta(imgElement, player) {
-            let erros = parseInt(imgElement.dataset.erros || 0);
-            if (erros > 3) {
-                console.warn("Muitos erros ao carregar imagens. Verifique sua internet.");
-                imgElement.onerror = null; 
-                return;
-            }
-            imgElement.dataset.erros = erros + 1;
-
-            if (poolDisponivel.length === 0) {
-                poolDisponivel = embaralhar([...megaPool]); 
-            }
-            
-            let novaUrl = poolDisponivel.pop();
-            imgElement.src = novaUrl;
-            torneio[faseAtual][partidaAtual][player] = novaUrl;
-        }
-
-        function escolherVencedor(player) {
-            const partida = torneio[faseAtual][partidaAtual];
-            const vencedorId = (player === 'p1') ? partida.p1 : partida.p2;
-
-            if (faseAtual === 4) {
-                campeao = vencedorId;
-                gerarChaveamentoFinal();
-                return;
-            }
-
-            const proximaPartidaIndex = Math.floor(partidaAtual / 2);
-            const isPlayer2 = (partidaAtual % 2 !== 0);
-
-            if (isPlayer2) {
-                torneio[faseAtual + 1][proximaPartidaIndex].p2 = vencedorId;
-            } else {
-                torneio[faseAtual + 1][proximaPartidaIndex].p1 = vencedorId;
-            }
-
-            partidaAtual++;
-            if (partidaAtual >= torneio[faseAtual].length) {
-                faseAtual++;
-                partidaAtual = 0;
-            }
-
-            document.getElementById('card-left').dataset.erros = 0;
-            document.getElementById('card-right').dataset.erros = 0;
-            atualizarArena();
-        }
-
-        /* FUNÇÃO AUXILIAR PARA O CANVAS COM PROXY DE CORS */
-        function getCardHtml(url, extraClass = '') {
-            const urlLimpa = url.replace('https://', '');
-            const proxyUrl = `https://wsrv.nl/?url=${urlLimpa}&output=webp`;
-            const seguraLimpa = cartaSegura.replace('https://', '');
-            const fallbackUrl = `https://wsrv.nl/?url=${seguraLimpa}&output=webp`;
-            const tagErroFinal = `onerror="this.onerror=null; this.src='${fallbackUrl}';"`;
-            
-            return `
-                <div class="slot ${extraClass}">
-                    <img crossorigin="anonymous" src="${proxyUrl}" ${tagErroFinal} alt="Card">
-                </div>
-            `;
-        }
-
-        function gerarChaveamentoFinal() {
-            document.getElementById('screen-arena').style.display = 'none';
-            document.getElementById('screen-bracket').style.display = 'block';
-
-            const board = document.getElementById('bracket-board');
-          
-          // Passa o wallpaper pelo proxy para forçar a liberação do CORS no canvas
-            const bgLimpo = urlWallpaper.replace('https://', '');
-            const bgProxy = `https://wsrv.nl/?url=${bgLimpo}&output=webp`;
-          
-            // Injeta a imagem com z-index 0 (fundo) e opacidade 0.3 (escurecido)
-            board.innerHTML = `
-                <img crossorigin="anonymous" src="${bgProxy}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.3; border-radius: 12px; pointer-events: none;" alt="Background">
-            `;
-
-            function criarPartidaHtml(roundIndex, matchIndex) {
-                const match = torneio[roundIndex][matchIndex];
-                let vencedorId = null;
-
-                if (roundIndex < 4) {
-                    const nextMatch = torneio[roundIndex + 1][Math.floor(matchIndex / 2)];
-                    if (nextMatch.p1 === match.p1 || nextMatch.p2 === match.p1) vencedorId = match.p1;
-                    else if (nextMatch.p1 === match.p2 || nextMatch.p2 === match.p2) vencedorId = match.p2;
-                } else {
-                    vencedorId = campeao;
-                }
-
-                const classeP1 = (vencedorId === match.p1) ? 'winner' : 'loser';
-                const classeP2 = (vencedorId === match.p2) ? 'winner' : 'loser';
-
-                return `
-                    <div class="match">
-                        ${getCardHtml(match.p1, classeP1)}
-                        ${getCardHtml(match.p2, classeP2)}
-                    </div>`;
-            }
-
-            function criarColuna(roundIndex, startMatch, endMatch) {
-                let colHTML = `<div class="column">`;
-                for (let m = startMatch; m <= endMatch; m++) {
-                    colHTML += criarPartidaHtml(roundIndex, m);
-                }
-                colHTML += `</div>`;
-                return colHTML;
-            }
-
-            let leftSide = document.createElement('div');
-            leftSide.className = 'side left';
-            leftSide.innerHTML += criarColuna(0, 0, 7);
-            leftSide.innerHTML += criarColuna(1, 0, 3);
-            leftSide.innerHTML += criarColuna(2, 0, 1);
-            leftSide.innerHTML += criarColuna(3, 0, 0);
-
-            let rightSide = document.createElement('div');
-            rightSide.className = 'side right';
-            rightSide.innerHTML += criarColuna(0, 8, 15);
-            rightSide.innerHTML += criarColuna(1, 4, 7);
-            rightSide.innerHTML += criarColuna(2, 2, 3);
-            rightSide.innerHTML += criarColuna(3, 1, 1);
-
-            let center = document.createElement('div');
-            center.className = 'center-stage';
-            const finalMatch = torneio[4][0];
-            
-            const classeFinalP1 = (campeao === finalMatch.p1) ? 'winner extra-slot' : 'loser extra-slot';
-            const classeFinalP2 = (campeao === finalMatch.p2) ? 'winner extra-slot' : 'loser extra-slot';
-
-            center.innerHTML = `
-                <h1 style="color: #d4af37; font-size: 32px; margin: 0 0 30px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); text-transform: uppercase; text-align: center; letter-spacing: 2px;">Super YGO Cup!</h1>
-                <h2>FINAL</h2>
-                <div class="match" style="flex-direction:row; background:transparent; border:none; gap:10px;">
-                    ${getCardHtml(finalMatch.p1, classeFinalP1)}
-                    ${getCardHtml(finalMatch.p2, classeFinalP2)}
-                </div>
-                <h2>CAMPEÃO</h2>
-                ${getCardHtml(campeao, 'winner-slot')}
-            `;
-            const style = document.createElement('style');
-            style.textContent = `.extra-slot { width:55px; height:80px; }`;
-            document.head.appendChild(style);
-
-            board.appendChild(leftSide);
-            board.appendChild(center);
-            board.appendChild(rightSide);
-            board.innerHTML += `<div class="watermark">superygo.blogspot.com</div>`;
-        }
-
-        async function compartilharResultado() {
-            const btn = document.getElementById('btn-share');
-            btn.innerText = "Gerando Imagem...";
-            btn.disabled = true; 
-            
-            const board = document.getElementById('bracket-board');
-            
-            try {
-                const canvas = await html2canvas(board, {
-                    backgroundColor: null, /* Deixa transparente para mostrar a sua imagem */
-                    useCORS: true,
-                    scale: 2 
-                });
-                
-                canvas.toBlob(async (blob) => {
-                    try {
-                        const file = new File([blob], 'yu-gi-oh-cup-resultado.png', { type: 'image/png' });
-                        const linkBlog = "https://superygo.blogspot.com/p/yu-gi-oh-cup.html";
-
-                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                            try {
-                                await navigator.share({
-                                    title: 'YGO Cup',
-                                    text: "Montei meu chaveamento de Cartas Favoritas! Venha fazer o seu 👇",
-                                    url: linkBlog,
-                                    files: [file]
-                                });
-                            } catch (shareErr) {
-                                fallbackDownload(blob, linkBlog);
-                            }
-                        } else {
-                            fallbackDownload(blob, linkBlog);
-                        }
-                    } catch (err) {
-                        alert("Erro ao processar a imagem no seu dispositivo.");
-                    } finally {
-                        btn.innerText = "Desafiar Amigos";
-                        btn.disabled = false;
-                    }
-                }, 'image/png');
-                
-            } catch (err) {
-                alert("Houve um erro ao renderizar o chaveamento. Verifique sua conexão.");
-                btn.innerText = "Desafiar Amigos";
-                btn.disabled = false;
-            }
-        }
-
-        function fallbackDownload(blob, linkBlog) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'yu-gi-oh-cup-resultado.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url); 
-            alert("A imagem foi baixada na sua galeria! Envie-a aos seus amigos junto com o link: " + linkBlog);
-        }
-
-        iniciarTorneio();
-    </script>
-</body>
-</html>
+    
