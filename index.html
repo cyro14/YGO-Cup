@@ -180,102 +180,130 @@
         .btn-restart:hover { background-color: #222; }
         #btn-download:hover { background-color: #2980b9; }
         
-        /* --- TELA 3: HALL DA FAMA --- */
+  /* --- TELA 3: HALL DA FAMA (ESTILO LADDER VERTICAL) --- */
     #screen-ranking {
         display: none;
         flex-direction: column;
         align-items: center;
         margin: 20px auto;
-        max-width: 950px;
-        background: #0b0d17;
+        max-width: 600px; /* Mais estreito para focar no formato vertical */
+        background-color: #0b0d17;
         border: 2px solid var(--gold);
         border-radius: 12px;
-        padding: 30px 20px;
+        padding: 0;
         box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         position: relative;
     }
 
-    #screen-ranking h2 {
-        color: var(--gold);
-        text-transform: uppercase;
-        font-size: 28px;
-        font-weight: 900;
-        margin-top: 0;
-        margin-bottom: 25px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-        letter-spacing: 2px;
-        border-bottom: 2px solid var(--gold);
-        padding-bottom: 10px;
-        display: inline-block;
-    }
-
     #ranking-board {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        width: 100%;
-        margin-bottom: 25px;
-        position: relative;
-    }
-
-    .rank-card {
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
-        border-radius: 10px;
-        border: 2px solid #333;
-        width: 130px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        transition: transform 0.2s;
-    }
-
-    .rank-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .rank-card.top-1 {
-        border-color: var(--gold);
-        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(26, 26, 26, 0.8) 100%);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-    }
-
-    .rank-number {
-        font-size: 22px;
-        font-weight: 900;
-        margin-bottom: 8px;
-    }
-
-    .rank-img-container {
-        width: 90px;
-        height: 130px;
-        border-radius: 6px;
+        width: 100%;
+        padding: 30px 20px;
+        box-sizing: border-box;
+        position: relative;
         overflow: hidden;
-        border: 2px solid #555;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-        margin-bottom: 10px;
+        border-radius: 12px;
+    }
+
+    #ranking-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 480px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Estilo de cada linha da Ladder (2º ao 10º lugar) */
+    .ladder-row {
         display: flex;
         align-items: center;
-        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        padding: 10px 15px;
+        gap: 15px;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .ladder-row:hover {
+        transform: scale(1.02);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Posição #1 em Destaque Especial no Topo */
+    .ladder-row.top-1 {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(26, 26, 26, 0.9) 100%);
+        border: 2px solid var(--gold);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        padding: 15px 20px;
+    }
+
+    .ladder-position {
+        font-size: 20px;
+        font-weight: 900;
+        color: #fff;
+        min-width: 45px;
+        text-align: center;
+    }
+
+    .top-1 .ladder-position {
+        color: var(--gold);
+        font-size: 26px;
+    }
+
+    .ladder-img-box {
+        width: 50px;
+        height: 72px;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 2px solid #555;
+        flex-shrink: 0;
         background: #1a1a1a;
     }
 
-    .rank-img-container img {
+    .top-1 .ladder-img-box {
+        width: 65px;
+        height: 95px;
+        border-color: var(--gold);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+    }
+
+    .ladder-img-box img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .rank-wins {
+    .ladder-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex-grow: 1;
+    }
+
+    .ladder-title {
+        font-size: 14px;
+        color: #aaa;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .top-1 .ladder-title {
+        color: var(--gold);
+        font-size: 16px;
+    }
+
+    .ladder-wins {
         color: #25D366;
         font-weight: bold;
-        font-size: 13px;
-        background: rgba(37, 211, 102, 0.1);
-        padding: 4px 8px;
-        border-radius: 12px;
-        border: 1px solid rgba(37, 211, 102, 0.3);
+        font-size: 15px;
+        margin-top: 3px;
     }
     </style>
 </head>
@@ -323,17 +351,19 @@
   
   <!-- TELA 3: HALL DA FAMA -->
     <div id="screen-ranking">
-        <!-- Div interna que será usada para exportar a imagem bonitinha -->
-        <div id="ranking-board" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-            <h2 style="color: var(--gold); text-transform: uppercase; margin-bottom: 5px;">🏆 Hall da Fama</h2>
-            <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">As cartas mais vitoriosas da comunidade no YGO Cup</p>
-            <div id="ranking-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%;"></div>
+        <div id="ranking-board">
+            <!-- Background injetado com proxy para o html2canvas ler sem erro de CORS -->
+            <img crossorigin="anonymous" src="https://wsrv.nl/?url=blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgo9rlwCqNwkgF_bbv409Mdqx24wJlql8My7Hjn1qc2EZnQJaWoNSWQVO_dzIBKjwTLdX_GZ77Q-Fv8Sr-fQNG1IV9aV2xlc5DYay2VFrsaBUm44Fce3uz0v5K1f-3qO-ZDrbTxVX1rQqDhsDrQNOMe0zFo6DV0XF43gfBRjcXzq83L1Km9rFyVgAD70wax/s1600/Design%20sem%20nome%20(14).png&output=webp" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.35; border-radius: 12px; pointer-events: none;" alt="Background">
+
+            <h2 style="color: var(--gold); text-transform: uppercase;">🏆 Hall da Fama</h2>
+            <p style="color: #ccc; margin-bottom: 25px; font-size: 14px; position: relative; z-index: 1;">As cartas mais vitoriosas da comunidade no YGO Cup</p>
             
-            <!-- Marca d'água oculta na tela, que aparece perfeitamente na imagem gerada -->
-            <div class="watermark" style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.3);">superygo.blogspot.com • YGO CUP OFICIAL</div>
+            <div id="ranking-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; position: relative; z-index: 1;"></div>
+            
+            <div class="watermark" style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.4); position: relative; z-index: 1;">superygo.blogspot.com • YGO CUP OFICIAL</div>
         </div>
 
-        <div class="btn-container" style="margin-top: 15px; display: flex; gap: 15px; justify-content: center;">
+        <div class="btn-container" style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
             <button id="btn-download-ranking" onclick="baixarRanking()" style="background-color: #3498db;">⬇️ Baixar Hall da Fama</button>
             <button class="btn-restart" onclick="iniciarTorneio()">Voltar para a Arena</button>
         </div>
@@ -530,7 +560,7 @@
         const nomesFases = ["Fase de Grupos", "Oitavas de Final", "Quartas de Final", "Semifinal", "A Grande Final"];
         const cartaSegura = cartasDatabase[0].url; 
 
-        const urlWallpaper = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgo9rlwCqNwkgF_bbv409Mdqx24wJlql8My7Hjn1qc2EZnQJaWoNSWQVO_dzIBKjwTLdX_GZ77Q-Fv8Sr-fQNG1IV9aV2xlc5DYay2VFrsaBUm44Fce3uz0v5K1f-3qO-ZDrbTxVX1rQqDhsDrQNOMe0zFo6DV0XF43gfBRjcXzq83L1Km9rFyVgAD70wax/s1600/Design%20sem%20nome%20(14).png";
+        const urlWallpaper = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6rVMI80g5egeEOKBfoPtbIgzeSYbAJB9rqRk4YjGOUbU5BAcL1pFWf7FoQpNISItThOAN5zpPGKZLUf4CGynad8Wfc0vp9zhFjqAlY1-w9-TLEvrqpOzNex0Lto-_apM3ln0RSDftVBIxQkIv_GLGJuO965ugi817CS_G3R97vuG-vnTuCZlGZ-N2eZQ1/s1890/ChatGPT%20Image%2020%20de%20set.%20de%202026,%2011_05_20.png.png";
         
         function otimizarUrl(url) {
             if (!url) return cartaSegura;
@@ -572,7 +602,7 @@
             if (telaRanking) telaRanking.style.display = 'flex';
             
             const container = document.getElementById('ranking-container');
-            container.innerHTML = '<p style="color: #888; font-weight: bold; width: 100%;">Conectando ao banco de dados...</p>';
+            container.innerHTML = '<p style="color: #888; font-weight: bold; width: 100%; text-align: center;">Conectando ao banco de dados...</p>';
 
             try {
                 const response = await fetch(scriptGoogleURL + "?action=ranking");
@@ -581,7 +611,7 @@
                 container.innerHTML = ''; 
 
                 if (top10.length === 0) {
-                    container.innerHTML = '<p style="color: #fff;">O ranking ainda está vazio. Seja o primeiro a finalizar uma copa!</p>';
+                    container.innerHTML = '<p style="color: #fff; text-align: center;">O ranking ainda está vazio. Seja o primeiro a finalizar uma copa!</p>';
                     return;
                 }
 
@@ -589,29 +619,42 @@
                     const imgOtimizada = otimizarUrl(item.url);
                     
                     const isTop1 = index === 0;
-                    const cardClass = isTop1 ? 'rank-card top-1' : 'rank-card';
-                    const corTextoRank = isTop1 ? 'var(--gold)' : '#ffffff';
+                    const rowClass = isTop1 ? 'ladder-row top-1' : 'ladder-row';
                     
-                    // Medalhas especiais para o Pódio
-                    let medalha = `#${index + 1}`;
-                    if (index === 0) medalha = '👑 #1';
-                    else if (index === 1) medalha = '🥈 #2';
-                    else if (index === 2) medalha = '🥉 #3';
+                    // Definição dos ícones/posições da ladder
+                    let posText = `#${index + 1}`;
+                    let labelStatus = "Líder da Ladder";
+                    
+                    if (index === 0) {
+                        posText = "👑 #1";
+                        labelStatus = "Rei da YGO Cup";
+                    } else if (index === 1) {
+                        posText = "🥈 #2";
+                        labelStatus = "Vice-Líder";
+                    } else if (index === 2) {
+                        posText = "🥉 #3";
+                        labelStatus = "Top 3 da Comunidade";
+                    } else {
+                        labelStatus = `${index + 1}º Lugar Geral`;
+                    }
 
                     container.innerHTML += `
-                        <div class="${cardClass}">
-                            <span class="rank-number" style="color: ${corTextoRank};">${medalha}</span>
-                            <div class="rank-img-container" style="${isTop1 ? 'border-color: var(--gold); box-shadow: 0 0 12px rgba(212,175,55,0.6);' : ''}">
+                        <div class="${rowClass}">
+                            <div class="ladder-position">${posText}</div>
+                            <div class="ladder-img-box">
                                 <img crossorigin="anonymous" src="${imgOtimizada}" alt="Rank ${index + 1}">
                             </div>
-                            <span class="rank-wins">🏆 ${item.vitorias}V</span>
+                            <div class="ladder-info">
+                                <span class="ladder-title">${labelStatus}</span>
+                                <span class="ladder-wins">🏆 ${item.vitorias} Vitórias</span>
+                            </div>
                         </div>
                     `;
                 });
 
             } catch (err) {
                 console.error("Erro ao puxar o ranking:", err);
-                container.innerHTML = '<p style="color: #d32f2f; font-weight: bold;">Falha ao conectar com o ranking. Tente novamente mais tarde.</p>';
+                container.innerHTML = '<p style="color: #d32f2f; font-weight: bold; text-align: center;">Falha ao conectar com o ranking. Tente novamente mais tarde.</p>';
             }
         }
 
