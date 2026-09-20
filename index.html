@@ -180,6 +180,103 @@
         .btn-restart:hover { background-color: #222; }
         #btn-download:hover { background-color: #2980b9; }
         
+        /* --- TELA 3: HALL DA FAMA --- */
+    #screen-ranking {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px auto;
+        max-width: 950px;
+        background: #0b0d17;
+        border: 2px solid var(--gold);
+        border-radius: 12px;
+        padding: 30px 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        position: relative;
+    }
+
+    #screen-ranking h2 {
+        color: var(--gold);
+        text-transform: uppercase;
+        font-size: 28px;
+        font-weight: 900;
+        margin-top: 0;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        letter-spacing: 2px;
+        border-bottom: 2px solid var(--gold);
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+
+    #ranking-board {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .rank-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid #333;
+        width: 130px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        transition: transform 0.2s;
+    }
+
+    .rank-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .rank-card.top-1 {
+        border-color: var(--gold);
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(26, 26, 26, 0.8) 100%);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .rank-number {
+        font-size: 22px;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .rank-img-container {
+        width: 90px;
+        height: 130px;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 2px solid #555;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1a1a1a;
+    }
+
+    .rank-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rank-wins {
+        color: #25D366;
+        font-weight: bold;
+        font-size: 13px;
+        background: rgba(37, 211, 102, 0.1);
+        padding: 4px 8px;
+        border-radius: 12px;
+        border: 1px solid rgba(37, 211, 102, 0.3);
+    }
     </style>
 </head>
 <body>
@@ -225,10 +322,21 @@
     </div>
   
   <!-- TELA 3: HALL DA FAMA -->
-    <div id="screen-ranking" style="display: none; flex-direction: column; align-items: center; margin-top: 20px;">
-        <h2 style="color: var(--gold); text-transform: uppercase;">Top 10 da Comunidade</h2>
-        <div id="ranking-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 900px; margin-bottom: 20px;"></div>
-        <button onclick="iniciarTorneio()">Voltar para a Arena</button>
+    <div id="screen-ranking">
+        <!-- Div interna que será usada para exportar a imagem bonitinha -->
+        <div id="ranking-board" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <h2 style="color: var(--gold); text-transform: uppercase; margin-bottom: 5px;">🏆 Hall da Fama</h2>
+            <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">As cartas mais vitoriosas da comunidade no YGO Cup</p>
+            <div id="ranking-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%;"></div>
+            
+            <!-- Marca d'água oculta na tela, que aparece perfeitamente na imagem gerada -->
+            <div class="watermark" style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.3);">superygo.blogspot.com • YGO CUP OFICIAL</div>
+        </div>
+
+        <div class="btn-container" style="margin-top: 15px; display: flex; gap: 15px; justify-content: center;">
+            <button id="btn-download-ranking" onclick="baixarRanking()" style="background-color: #3498db;">⬇️ Baixar Hall da Fama</button>
+            <button class="btn-restart" onclick="iniciarTorneio()">Voltar para a Arena</button>
+        </div>
     </div>
 
     <script>
@@ -469,29 +577,78 @@
             try {
                 const response = await fetch(scriptGoogleURL + "?action=ranking");
                 const top10 = await response.json();
+
                 container.innerHTML = ''; 
 
                 if (top10.length === 0) {
-                    container.innerHTML = '<p>O ranking ainda está vazio. Seja o primeiro a finalizar uma copa!</p>';
+                    container.innerHTML = '<p style="color: #fff;">O ranking ainda está vazio. Seja o primeiro a finalizar uma copa!</p>';
                     return;
                 }
 
                 top10.forEach((item, index) => {
                     const imgOtimizada = otimizarUrl(item.url);
-                    const corBorda = index === 0 ? 'var(--gold)' : '#333';
-                    const corTextoRank = index === 0 ? 'var(--gold)' : '#fff';
+                    
+                    const isTop1 = index === 0;
+                    const cardClass = isTop1 ? 'rank-card top-1' : 'rank-card';
+                    const corTextoRank = isTop1 ? 'var(--gold)' : '#ffffff';
+                    
+                    // Medalhas especiais para o Pódio
+                    let medalha = `#${index + 1}`;
+                    if (index === 0) medalha = '👑 #1';
+                    else if (index === 1) medalha = '🥈 #2';
+                    else if (index === 2) medalha = '🥉 #3';
 
                     container.innerHTML += `
-                        <div style="display: flex; flex-direction: column; align-items: center; background-color: #1a1a1a; padding: 15px; border-radius: 8px; border: 2px solid ${corBorda}; width: 120px;">
-                            <span style="font-size: 24px; font-weight: 900; color: ${corTextoRank}; margin-bottom: 10px;">#${index + 1}</span>
-                            <img src="${imgOtimizada}" style="width: 100%; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);" alt="Rank ${index + 1}">
-                            <span style="color: #25D366; font-weight: bold; margin-top: 10px; font-size: 14px;">🏆 ${item.vitorias} Vitórias</span>
+                        <div class="${cardClass}">
+                            <span class="rank-number" style="color: ${corTextoRank};">${medalha}</span>
+                            <div class="rank-img-container" style="${isTop1 ? 'border-color: var(--gold); box-shadow: 0 0 12px rgba(212,175,55,0.6);' : ''}">
+                                <img crossorigin="anonymous" src="${imgOtimizada}" alt="Rank ${index + 1}">
+                            </div>
+                            <span class="rank-wins">🏆 ${item.vitorias}V</span>
                         </div>
                     `;
                 });
+
             } catch (err) {
                 console.error("Erro ao puxar o ranking:", err);
                 container.innerHTML = '<p style="color: #d32f2f; font-weight: bold;">Falha ao conectar com o ranking. Tente novamente mais tarde.</p>';
+            }
+        }
+
+        async function baixarRanking() {
+            const btn = document.getElementById('btn-download-ranking');
+            btn.innerText = "Baixando...";
+            btn.disabled = true; 
+            
+            const board = document.getElementById('ranking-board');
+            
+            try {
+                const canvas = await html2canvas(board, { 
+                    backgroundColor: '#0b0d17', 
+                    useCORS: true, 
+                    scale: 3 
+                });
+                
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const timestamp = new Date().getTime();
+                    a.download = `super-ygo-cup-hall-da-fama-${timestamp}.png`;
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url); 
+                    
+                    btn.innerText = "⬇️ Baixar Hall da Fama";
+                    btn.disabled = false;
+                }, 'image/png');
+                
+            } catch (err) {
+                alert("Houve um erro ao renderizar o download do ranking. Verifique sua conexão.");
+                btn.innerText = "⬇️ Baixar Hall da Fama";
+                btn.disabled = false;
             }
         }
 
