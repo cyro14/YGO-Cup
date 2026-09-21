@@ -49,9 +49,6 @@ const cartasDatabase = [
     { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgrOfhnAMTZdvanG0E6SPMox4LtLNfN8vutu8CDa2Ufr37pVVOrq8vS_Y9C9EtLNV_PrPuYZjpkrODsE47t7V7aGsEYFkCptagUMgLkKTr11DONpO_OnM-f4GPMTx4RcDpdhtR0WQ7iAL3c28LZnRfRans7Lref_sB4cY4Ukxdp08T3X63X3jSuU6lfpWHe/s320/1000112597.jpg", tipo: "magia" },
     { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEPpptKec68N10KF2fBmgYnqi3DBngfspCYGmlGZklwdidLK9mm2KIRiFr7ARA_5IUn7zNqtW_SXJU2OMheeM9olZADxRW3wbVfoFEM8Wm7CXCO-KbesvAKlfZHpWVWsSb4N4g0FQH4dNfvI8QtC7bAnONpCWBENYsi2r4h2W0G80p8By9SWmxiXEtWmWz/s320/1000112598.jpg", tipo: "monstro" },
     { url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEilFPhJcJR0GuFeKnzSpKAQRMI-w4cTQg5t-8t8JP6cGOfWccy9AHRwtYe9eHhgYvgagZAN4MyheTXuDy3mcQA2TfhiZe501TnNgFsTOJX6peqduKmzfwEPYQMqeFYJ4LCS0b6nWt0wwSOdqZI_ztfqQncalFtiDvHKvj_K1hWWnYM20afpnLyrXX2Tq6uJ/s320/1000112599.jpg", tipo: "magia" },
-
-
-
     { url: "https://blogger.googleusercontent.com/img/a/AVvXsEjG98lxwUno6WzauI-jCq2Nj9JDz9duIC-rEW-9eMeD6LcoPM4dVcAWsNvyqckU05WKRjsVnGVNj9LPTYLsbCOb1pT1HuSK7_9HCqE2462XwnhcU618mXJarURH4T4oDgxTfCcqHb-_7496aN-phk0lXxAXFmawucxNB9rSsdcZKQn_wdfJxWhI2fFNgy1U", tipo: "monstro" },
     { url: "https://blogger.googleusercontent.com/img/a/AVvXsEgVFNsVwQTnCaVjRS-6ZeHh90-2_qSuLvxOcWkuwIyEo9sgR2W6ayYLKGMynpurtv3ZfKZiaeEW2i-rJ3b3BzkLhzEM87pEAE5DEDPLHALhu9Tw-qznKqmbvT1T2ozgR9dFEeWV_mMwEQ7YnnMQ1AtK_9vO-UnC3yMKerUTWXlJtReuOftATXMXs7_f_Q53", tipo: "monstro" },
     { url: "https://blogger.googleusercontent.com/img/a/AVvXsEhnqQK1Cvm0UC-bMYdqdC-7VKExusewQWsPHsVOxgS4T5YHG_td8j_KkB7sOOBQuLbTCGywvmyYiWXtmW_WpQ1t__8fV224rR9dqqu1jEu3TEkoHpnn4O6DgKsrRv8esuh8iPASFrW8O9_A8NgPNCsNe4m_J6RKFyIR02BPIAc-WmAjOPOHE0yuBVWKD9g2", tipo: "magia" },
@@ -217,6 +214,31 @@ function embaralhar(array) {
         [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
     return array;
+}
+
+// --- CONTROLE DE TELA CHEIA ---
+function toggleFullScreen() {
+    let elem = document.documentElement; // Pega a página inteira
+    
+    if (!document.fullscreenElement) {
+        // Tenta entrar em tela cheia
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
+    } else {
+        // Tenta sair da tela cheia
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+            document.msExitFullscreen();
+        }
+    }
 }
 
 function fazerPreload(urls) {
