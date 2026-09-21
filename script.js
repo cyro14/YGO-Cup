@@ -354,7 +354,13 @@ function iniciarTorneio() {
     document.getElementById('screen-bracket').style.display = 'none';
     document.getElementById('screen-arena').style.display = 'flex';
     document.getElementById('screen-ranking').style.display = 'none';
-
+    
+// VERIFICAÇÃO DA TELA CHEIA (Adicione isto aqui!)
+    let checkFs = document.getElementById('check-fullscreen');
+    if (checkFs && checkFs.checked) {
+        toggleFullScreen();
+    }
+    
     const filtroSelecionado = document.getElementById('filtro-cartas').value;
     if (filtroSelecionado === "todos") {
         megaPool = cartasDatabase.map(carta => carta.url);
