@@ -149,10 +149,10 @@ p {
 }
 
 .arena-card {
-    width: 40vw;
-    max-width: 180px;
-    height: 58vw;
-    max-height: 260px;
+    width: 140px;
+    height: 200px;
+    max-width: 42vw;
+    max-height: 60vh;
     background-color: #2c3e50;
     border: 3px solid #333;
     border-radius: 8px;
@@ -168,8 +168,10 @@ p {
 .arena-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    /* Garante que a carta inteira caiba dentro do espaço sem ser cortada */
     display: block;
+    background: #111;
 }
 
 .arena-card:hover {
@@ -179,50 +181,51 @@ p {
 }
 
 /* --- ESTILOS DO "VS" ÉPICO E 100% PREENCHIDO --- */
-        .vs-text { 
-            position: relative;
-            font-size: 55px; 
-            font-weight: 900; 
-            font-style: italic;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            
-            /* Cor base sólida e brilhante que preenche todo o interior perfeitamente */
-            color: #ffcc00; 
-            
-            /* Múltiplas camadas de sombra para criar o efeito de brilho de fogo e profundidade */
-            text-shadow: 
-                0 2px 0 #ff3300,
-                0 4px 0 #cc0000,
-                0 6px 0 #990000,
-                0 8px 10px rgba(0, 0, 0, 0.9),
-                0 0 25px rgba(255, 140, 0, 0.9);
-                
-            margin: 0 15px; 
-            z-index: 10;
-            animation: pulseVS 1.2s ease-in-out infinite alternate;
-        }
+.vs-text {
+    position: relative;
+    font-size: 55px;
+    font-weight: 900;
+    font-style: italic;
+    font-family: 'Impact', 'Arial Black', sans-serif;
 
-        /* Contorno externo escuro para destacar perfeitamente na tela preta */
-        .vs-text::after {
-            content: "VS";
-            position: absolute;
-            left: 0;
-            top: 0;
-            z-index: -1;
-            -webkit-text-stroke: 5px #3a0000;
-            color: #3a0000;
-        }
+    /* Cor base sólida e brilhante que preenche todo o interior perfeitamente */
+    color: #ffcc00;
 
-        @keyframes pulseVS {
-            0% { 
-                transform: scale(1) rotate(-3deg); 
-                filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.6)); 
-            }
-            100% { 
-                transform: scale(1.15) rotate(3deg); 
-                filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); 
-            }
-        }
+    /* Múltiplas camadas de sombra para criar o efeito de brilho de fogo e profundidade */
+    text-shadow:
+        0 2px 0 #ff3300,
+        0 4px 0 #cc0000,
+        0 6px 0 #990000,
+        0 8px 10px rgba(0, 0, 0, 0.9),
+        0 0 25px rgba(255, 140, 0, 0.9);
+
+    margin: 0 15px;
+    z-index: 10;
+    animation: pulseVS 1.2s ease-in-out infinite alternate;
+}
+
+/* Contorno externo escuro para destacar perfeitamente na tela preta */
+.vs-text::after {
+    content: "VS";
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    -webkit-text-stroke: 5px #3a0000;
+    color: #3a0000;
+}
+
+@keyframes pulseVS {
+    0% {
+        transform: scale(1) rotate(-3deg);
+        filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.6));
+    }
+
+    100% {
+        transform: scale(1.15) rotate(3deg);
+        filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1));
+    }
+}
 
 /* --- TELA DO CHAVEAMENTO FINAL --- */
 #screen-bracket {
